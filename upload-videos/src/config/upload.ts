@@ -2,12 +2,12 @@ import { randomBytes } from 'node:crypto';
 import { diskStorage } from 'multer';
 import { resolve, parse } from 'path';
 
-const tmpFolder = resolve(__dirname, '..', '..', '..', 'tmp');
+const uploadFolder = resolve(__dirname, '..', '..', '..', '..', 'uploads');
 
 export default {
-  tmpFolder,
+  uploadFolder,
   storage: diskStorage({
-    destination: tmpFolder,
+    destination: uploadFolder,
     filename: (request, file, callback) => {
       const fileHash = 'file-' + randomBytes(10).toString('hex');
       const extension = parse(file.originalname).ext;

@@ -6,7 +6,7 @@ import { StorageProvider } from './StorageProvider';
 
 export class LocalStorageProvider implements StorageProvider {
   async delete(file: string, folder: string): Promise<void> {
-    const filename = resolve(`${upload.tmpFolder}/${folder}`, file);
+    const filename = resolve(`${upload.uploadFolder}/${folder}`, file);
 
     try {
       await promises.stat(filename);
@@ -19,10 +19,10 @@ export class LocalStorageProvider implements StorageProvider {
 
   async save(file: string, folder: string): Promise<string> {
     await promises.cp(
-      resolve(upload.tmpFolder, file),
-      resolve(`${upload.tmpFolder}/${folder}`, file),
+      resolve(upload.uploadFolder, file),
+      resolve(`${upload.uploadFolder}/${folder}`, file),
     );
-    await promises.unlink(`${upload.tmpFolder}/${file}`);
+    await promises.unlink(`${upload.uploadFolder}/${file}`);
     return file;
   }
 }

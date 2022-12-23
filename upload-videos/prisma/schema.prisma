@@ -18,7 +18,6 @@ model videos {
     storageName String
     disk String
     streamStorageName String?
-    streamConvertionProgress String?
     processedAt DateTime?
     createdAt DateTime @default(now())
 

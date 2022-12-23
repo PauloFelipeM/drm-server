@@ -10,6 +10,8 @@ export class PrismaVideoMapper {
       originalName: video.originalName,
       storageName: video.storageName,
       disk: video.disk,
+      streamStorageName: video.streamStorageName,
+      processedAt: video.processedAt,
       createdAt: video.createdAt,
     };
   }
@@ -22,6 +24,8 @@ export class PrismaVideoMapper {
         originalName: raw.originalName,
         storageName: raw.storageName,
         disk: raw.disk,
+        streamStorageName: raw.streamStorageName,
+        processedAt: raw.processedAt,
         createdAt: raw.createdAt,
       },
       raw.id,

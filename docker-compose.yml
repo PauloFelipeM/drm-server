@@ -3,6 +3,7 @@ version: '3'
 services:
   database:
     image: 'mysql/mysql-server:8.0'
+    container_name: drm-database
     ports:
       - '3306:3306'
     environment:
@@ -16,8 +17,21 @@ services:
       - 'mysql_data:/var/lib/mysql'
     networks:
       - drmServerNetwork
+  redis:
+    image: redis:alpine
+    container_name: drm-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass fXhHKLQgT7X5
+    volumes:
+      - 'redis_data:/data'
+    ports:
+      - "6379:6379"
+    networks:
+      - drmServerNetwork
 volumes:
   mysql_data:
+    driver: local
+  redis_data:
     driver: local
 networks:
   drmServerNetwork:

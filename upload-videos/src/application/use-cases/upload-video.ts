@@ -2,6 +2,10 @@ import { VideoRepository } from '@application/repositories/video-repository';
 import { Injectable } from '@nestjs/common';
 import { StorageProvider } from '@infra/providers/StorageProvider/StorageProvider';
 import { Video } from '@application/entities/video';
+import { join, resolve } from 'path';
+import upload from '@config/upload';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 interface UploadVideoRequest {
   clientId: string;
@@ -12,6 +16,7 @@ interface UploadVideoRequest {
 @Injectable()
 export class UploadVideo {
   constructor(
+    @InjectQueue('transcode-video-queue') private transcodeVideoQueue: Queue,
     private videoRepository: VideoRepository,
     private storageProvider: StorageProvider,
   ) {}
@@ -20,7 +25,7 @@ export class UploadVideo {
     const { clientId, title, video } = request;
     const fileName = video.filename;
 
-    const newUploadVideo = new Video({
+    const videoModel = new Video({
       clientId,
       title,
       disk: process.env.FILESYSTEM_DISK ?? 'local',
@@ -28,7 +33,12 @@ export class UploadVideo {
       storageName: fileName,
     });
 
-    await this.storageProvider.save(fileName, newUploadVideo.id);
-    await this.videoRepository.create(newUploadVideo);
+    await this.storageProvider.save(fileName, videoModel.id);
+    await this.videoRepository.create(videoModel);
+
+    await this.transcodeVideoQueue.add('transcodeVideo', {
+      videoId: videoModel.id,
+      fileName: fileName,
+    });
   }
 }

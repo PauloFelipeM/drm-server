@@ -7,8 +7,7 @@ export interface VideoProps {
   originalName: string;
   disk: string;
   storageName: string;
-  streamStorageName?: string;
-  streamConvertionProgress?: number;
+  streamStorageName?: string | null;
   processedAt?: Date | null;
   createdAt: Date;
 }
@@ -71,10 +70,6 @@ export class Video {
 
   public get streamStorageName(): string | null | undefined {
     return this.props.streamStorageName;
-  }
-
-  public get streamConvertionProgress(): number | null | undefined {
-    return this.props.streamConvertionProgress;
   }
 
   public get processedAt(): Date | null | undefined {
